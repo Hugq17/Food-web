@@ -157,10 +157,17 @@ export default function AddRestaurant({ onClose }) {
           className="border p-2 w-full rounded"
         >
           <option value="Ăn vặt">Ăn vặt</option>
-          <option value="Bún/Phở">Bún/Phở</option>
+          <option value="Nhậu lai rai">Nhậu lai rai</option>
+          <option value="Món Hàn">Món Hàn</option>
+          <option value="Món Trung">Món Trung</option>
+          <option value="Món Nhật">Món Nhật</option>
+          <option value="Món Thái">Món Thái</option>
+          <option value="Món nước">Món nước (bún, phở, mì…)</option>
+          <option value="Món khô">Món khô (cơm, mì trộn…)</option>
+          <option value="BBQ / Nướng">BBQ / Nướng</option>
+          <option value="Lẩu">Lẩu</option>
+          <option value="Trà sữa/Trà Trái Cây">Trà sữa / Trà trái cây</option>
           <option value="Cà phê">Cà phê</option>
-          <option value="Gà rán">Gà rán</option>
-          <option value="Sushi">Sushi</option>
         </select>
 
         <input
