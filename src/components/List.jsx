@@ -1,5 +1,6 @@
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import Comments from "./Comments";
 
 export default function List({ data, onSelect }) {
   const handleDelete = async (id, e) => {
@@ -20,8 +21,7 @@ export default function List({ data, onSelect }) {
       {data.map((item) => (
         <div
           key={item.id}
-          onClick={() => onSelect(item)}
-          className="bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
+          className="bg-white rounded-2xl shadow-md overflow-hidden transition-transform duration-200 hover:scale-[1.02]"
         >
           {/* IMAGE */}
           <div className="relative">
@@ -57,6 +57,17 @@ export default function List({ data, onSelect }) {
                 <span className="text-yellow-300 text-sm">
                   ⭐ {item.rating}
                 </span>
+
+                {/* 🔥 ICON MAP */}
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation(); // 🔥 cực quan trọng
+                    onSelect(item);
+                  }}
+                  className="bg-blue-500/90 px-2 py-1 rounded-full text-xs hover:scale-110 transition"
+                >
+                  📍
+                </button>
               </div>
             </div>
           </div>
@@ -80,6 +91,7 @@ export default function List({ data, onSelect }) {
                   : ""}
               </span>
             </div>
+            <Comments restaurantId={item.id} />
           </div>
         </div>
       ))}
