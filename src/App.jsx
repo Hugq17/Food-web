@@ -36,15 +36,16 @@ function App() {
 
   return (
     <div className="max-w-md mx-auto bg-gray-100 min-h-screen">
-      <h1 className="text-xl font-bold p-4 bg-white shadow">
-        🍜 Food Map
+      <h1 className="text-xl font-bold p-4 bg-gradient-to-r from-orange-500 to-yellow-400 text-white shadow">
+        🍜 Food Map by QH
       </h1>
-      <div className="flex justify-end px-3">
+
+      <div className="flex justify-end px-3 mt-2">
         <button
           onClick={() => setShowMap(!showMap)}
-          className="text-sm bg-black text-white px-3 py-1 rounded"
+          className="text-sm bg-gradient-to-r from-orange-500 to-yellow-400 text-white px-4 py-2 rounded-full shadow hover:scale-105 transition"
         >
-          {showMap ? "Ẩn map" : "Hiện map"}
+          {showMap ? "🗺️ Ẩn map" : "📍 Hiện map"}
         </button>
       </div>
       <Category

@@ -1,10 +1,9 @@
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
-
 export default function List({ data, onSelect }) {
   const handleDelete = async (id, e) => {
-    e.stopPropagation(); // 🔥 tránh click zoom map
+    e.stopPropagation();
 
     if (!confirm("Bạn có chắc muốn xoá không?")) return;
 
@@ -22,34 +21,49 @@ export default function List({ data, onSelect }) {
         <div
           key={item.id}
           onClick={() => onSelect(item)}
-          className="bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer"
+          className="bg-white rounded-2xl shadow-md overflow-hidden cursor-pointer transition-transform duration-200 hover:scale-[1.02]"
         >
           {/* IMAGE */}
           <div className="relative">
             <img
               src={item.image}
               alt={item.name}
-              className="w-full h-40 object-cover"
+              className="w-full h-44 object-cover"
             />
 
-            {/* ❌ NÚT XOÁ */}
+            {/* GRADIENT OVERLAY */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+
+            {/* CATEGORY BADGE */}
+            <div className="absolute top-2 left-2 bg-white/90 text-xs px-2 py-1 rounded-full">
+              {item.category}
+            </div>
+
+            {/* DELETE BUTTON */}
             <button
               onClick={(e) => handleDelete(item.id, e)}
-              className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
+              className="absolute top-2 right-2 bg-red-500/90 text-white px-2 py-1 rounded-full text-xs"
             >
-              X
+              ✕
             </button>
+
+            {/* NAME + RATING */}
+            <div className="absolute bottom-2 left-2 right-2 text-white">
+              <h3 className="font-semibold text-lg leading-tight">
+                {item.name}
+              </h3>
+
+              <div className="flex justify-between items-center mt-1">
+                <span className="text-yellow-300 text-sm">
+                  ⭐ {item.rating}
+                </span>
+              </div>
+            </div>
           </div>
 
           {/* CONTENT */}
           <div className="p-3">
-            <h3 className="font-semibold text-lg">{item.name}</h3>
             <p className="text-sm text-gray-500">{item.address}</p>
-
-            <div className="flex justify-between mt-2">
-              <span className="text-yellow-500">⭐ {item.rating}</span>
-              <span className="text-gray-400">{item.category}</span>
-            </div>
           </div>
         </div>
       ))}
