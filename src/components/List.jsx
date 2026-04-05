@@ -62,8 +62,24 @@ export default function List({ data, onSelect }) {
           </div>
 
           {/* CONTENT */}
+          {/* CONTENT */}
           <div className="p-3">
             <p className="text-sm text-gray-500">{item.address}</p>
+
+            {/* NGƯỜI THÊM */}
+            <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+              👤 <span>{item.createdBy || "Ẩn danh"}</span>
+            </div>
+
+            {/* NGÀY */}
+            <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+              ⏱{" "}
+              <span>
+                {item.createdAt?.toDate
+                  ? item.createdAt.toDate().toLocaleString("vi-VN")
+                  : ""}
+              </span>
+            </div>
           </div>
         </div>
       ))}

@@ -8,6 +8,7 @@ export default function AddRestaurant({ onClose }) {
   const [category, setCategory] = useState("Ăn vặt");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [createdBy, setCreatedBy] = useState("");
 
   // 🔥 LẤY LAT/LNG TỪ ĐỊA CHỈ
   const getLatLngFromAddress = async () => {
@@ -93,6 +94,8 @@ export default function AddRestaurant({ onClose }) {
         category,
         rating: 4,
         image: imageUrl,
+        createdBy: createdBy || "Ẩn danh", // 🔥 thêm dòng này
+        createdAt: new Date(), // 🔥 thêm timestamp
       });
 
       alert("Đã thêm quán!");
@@ -159,6 +162,13 @@ export default function AddRestaurant({ onClose }) {
           <option value="Gà rán">Gà rán</option>
           <option value="Sushi">Sushi</option>
         </select>
+
+        <input
+          placeholder="Người thêm (vd: Hùng Máy Dập)"
+          value={createdBy}
+          onChange={(e) => setCreatedBy(e.target.value)}
+          className="border p-2 w-full rounded"
+        />
 
         {/* file */}
         <input
