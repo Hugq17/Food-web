@@ -102,7 +102,8 @@ export default function AddRestaurant({ onClose }) {
           <option value="Ăn vặt">Ăn vặt</option>
           <option value="Bún/Phở">Bún/Phở</option>
           <option value="Cà phê">Cà phê</option>
-          <option value="Cà phê">Gà rán</option>
+          <option value="Gà rán">Gà rán</option>
+
         </select>
 
         <input

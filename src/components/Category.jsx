@@ -1,5 +1,5 @@
 export default function Category({ selected, setSelected }) {
-  const categories = ["Tất cả", "Bún/Phở", "Ăn vặt", "Cà phê"];
+  const categories = ["Tất cả", "Bún/Phở", "Ăn vặt", "Cà phê", "Gà rán"];
 
   return (
     <div className="flex gap-2 overflow-x-auto p-3">
