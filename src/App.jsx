@@ -60,13 +60,7 @@ function App() {
           {showMap ? "🗺️ Ẩn map" : "📍 Hiện map"}
         </button>
       </div>
-      <Category
-        selected={selected}
-        setSelected={(value) => {
-          setSelected(value);
-          setSelectedPlace(null);
-        }}
-      />
+     
       {showMap && (
         <div className="relative z-0">
           <div className="p-3">
@@ -74,6 +68,13 @@ function App() {
           </div>
         </div>
       )}
+       <Category
+        selected={selected}
+        setSelected={(value) => {
+          setSelected(value);
+          setSelectedPlace(null);
+        }}
+      />
       <List data={filtered} onSelect={handleSelectPlace} />
 
       {/* FORM */}
