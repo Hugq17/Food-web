@@ -5,6 +5,7 @@ export default function Category({ selected, setSelected }) {
     { name: "Ăn vặt", icon: "🍟" },
     { name: "Cà phê", icon: "☕" },
     { name: "Gà rán", icon: "🍗" },
+    { name: "Sushi", icon: "🍣" },
   ];
 
   return (

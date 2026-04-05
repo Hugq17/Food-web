@@ -34,16 +34,28 @@ function App() {
       ? restaurants
       : restaurants.filter((r) => r.category === selected);
 
+  const handleSelectPlace = (place) => {
+    setSelectedPlace(place);
+
+    // 👉 nếu đang ẩn map thì bật lên
+    setShowMap(true);
+
+    // 👉 scroll lên đầu
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
   return (
     <div className="max-w-md mx-auto bg-gray-100 min-h-screen">
-      <h1 className="text-xl font-bold p-4 bg-gradient-to-r from-orange-500 to-yellow-400 text-white shadow">
+      <h1 className="sticky top-0 z-20 text-xl font-bold p-4 bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow">
         🍜 Food Map by QH
       </h1>
 
       <div className="flex justify-end px-3 mt-2">
         <button
           onClick={() => setShowMap(!showMap)}
-          className="text-sm bg-gradient-to-r from-orange-500 to-yellow-400 text-white px-4 py-2 rounded-full shadow hover:scale-105 transition"
+          className="text-sm bg-gradient-to-r from-blue-500 to-blue-400 text-white px-4 py-2 rounded-full shadow hover:scale-105 transition"
         >
           {showMap ? "🗺️ Ẩn map" : "📍 Hiện map"}
         </button>
@@ -62,7 +74,7 @@ function App() {
           </div>
         </div>
       )}
-      <List data={filtered} onSelect={setSelectedPlace} />
+      <List data={filtered} onSelect={handleSelectPlace} />
 
       {/* FORM */}
       {showForm && <AddRestaurant onClose={() => setShowForm(false)} />}
@@ -70,7 +82,7 @@ function App() {
       {/* FLOAT BUTTON */}
       <button
         onClick={() => setShowForm(true)}
-        className="fixed bottom-5 right-5 bg-black text-white w-14 h-14 rounded-full text-2xl shadow-lg"
+        className="fixed bottom-5 right-5 bg-gradient-to-r from-blue-500 to-blue-400 text-white w-14 h-14 rounded-full text-2xl shadow-lg flex items-center justify-center transition hover:scale-110 active:scale-95"
       >
         +
       </button>
@@ -78,4 +90,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
