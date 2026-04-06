@@ -6,13 +6,17 @@ import Map from "./components/Map";
 import Category from "./components/Category";
 import List from "./components/List";
 import AddRestaurant from "./components/AddRestaurant";
+import RestaurantDetail from "./components/RestaurantDetail"; // 🔥 THÊM
 
 function App() {
   const [selected, setSelected] = useState("Tất cả");
   const [restaurants, setRestaurants] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [showMap, setShowMap] = useState(true);
-  const [showForm, setShowForm] = useState(false); // 🔥
+  const [showForm, setShowForm] = useState(false);
+
+  // 🔥 THÊM STATE NÀY
+  const [selectedDetail, setSelectedDetail] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -36,22 +40,22 @@ function App() {
 
   const handleSelectPlace = (place) => {
     setSelectedPlace(place);
-
-    // 👉 nếu đang ẩn map thì bật lên
     setShowMap(true);
 
-    // 👉 scroll lên đầu
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
+
   return (
     <div className="max-w-md mx-auto bg-gray-100 min-h-screen">
+      {/* HEADER */}
       <h1 className="sticky top-0 z-20 text-xl font-bold p-4 bg-gradient-to-r from-blue-500 to-blue-400 text-white shadow">
         🍜 Food Map by QH
       </h1>
 
+      {/* TOGGLE MAP */}
       <div className="flex justify-end px-3 mt-2">
         <button
           onClick={() => setShowMap(!showMap)}
@@ -60,25 +64,42 @@ function App() {
           {showMap ? "🗺️ Ẩn map" : "📍 Hiện map"}
         </button>
       </div>
-     
+
+      {/* MAP */}
       {showMap && (
-        <div className="relative z-0">
-          <div className="p-3">
-            <Map data={filtered} selectedPlace={selectedPlace} />
-          </div>
+        <div className="p-3">
+          <Map data={filtered} selectedPlace={selectedPlace} />
         </div>
       )}
-       <Category
+
+      {/* CATEGORY */}
+      <Category
         selected={selected}
         setSelected={(value) => {
           setSelected(value);
           setSelectedPlace(null);
         }}
       />
-      <List data={filtered} onSelect={handleSelectPlace} />
+
+      {/* LIST */}
+      <List
+        data={filtered}
+        onSelectDetail={(item) => setSelectedDetail(item)}
+        onSelectMap={handleSelectPlace}
+      />
+
+      {/* 🔥 DETAIL MODAL */}
+      {selectedDetail && (
+        <RestaurantDetail
+          item={selectedDetail}
+          onClose={() => setSelectedDetail(null)}
+        />
+      )}
 
       {/* FORM */}
-      {showForm && <AddRestaurant onClose={() => setShowForm(false)} />}
+      {showForm && (
+        <AddRestaurant onClose={() => setShowForm(false)} />
+      )}
 
       {/* FLOAT BUTTON */}
       <button
@@ -91,4 +112,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

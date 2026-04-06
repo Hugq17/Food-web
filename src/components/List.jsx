@@ -1,8 +1,7 @@
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import Comments from "./Comments";
 
-export default function List({ data, onSelect }) {
+export default function List({ data, onSelectDetail, onSelectMap }) {
   const handleDelete = async (id, e) => {
     e.stopPropagation();
 
@@ -31,25 +30,25 @@ export default function List({ data, onSelect }) {
               className="w-full h-44 object-cover"
             />
 
-            {/* GRADIENT OVERLAY */}
+            {/* OVERLAY */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
 
-            {/* CATEGORY BADGE */}
+            {/* CATEGORY */}
             <div className="absolute top-2 left-2 bg-white/90 text-xs px-2 py-1 rounded-full">
               {item.category}
             </div>
 
-            {/* DELETE BUTTON */}
+            {/* DELETE */}
             <button
               onClick={(e) => handleDelete(item.id, e)}
-              className="absolute top-2 right-2 bg-red-500/90 text-white px-2 py-1 rounded-full text-xs"
+              className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs"
             >
               ✕
             </button>
 
-            {/* NAME + RATING */}
+            {/* NAME + ACTION */}
             <div className="absolute bottom-2 left-2 right-2 text-white">
-              <h3 className="font-semibold text-lg leading-tight">
+              <h3 className="font-semibold text-lg">
                 {item.name}
               </h3>
 
@@ -58,40 +57,47 @@ export default function List({ data, onSelect }) {
                   ⭐ {item.rating}
                 </span>
 
-                {/* 🔥 ICON MAP */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation(); // 🔥 cực quan trọng
-                    onSelect(item);
-                  }}
-                  className="bg-blue-500/90 px-2 py-1 rounded-full text-xs hover:scale-110 transition"
-                >
-                  📍
-                </button>
+                <div className="flex gap-2">
+                  {/* 🔍 DETAIL */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectDetail(item);
+                    }}
+                    className="bg-white text-blue-500 px-2 py-1 rounded-full text-xs shadow"
+                  >
+                    🔍
+                  </button>
+
+                  {/* 📍 MAP */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectMap(item);
+                    }}
+                    className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs"
+                  >
+                    📍
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* CONTENT */}
-          {/* CONTENT */}
           <div className="p-3">
             <p className="text-sm text-gray-500">{item.address}</p>
 
-            {/* NGƯỜI THÊM */}
-            <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-              👤 <span>{item.createdBy || "Ẩn danh"}</span>
+            <div className="text-xs text-gray-400 mt-1">
+              👤 {item.createdBy || "Ẩn danh"}
             </div>
 
-            {/* NGÀY */}
-            <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
+            <div className="text-xs text-gray-400 mt-1">
               ⏱{" "}
-              <span>
-                {item.createdAt?.toDate
-                  ? item.createdAt.toDate().toLocaleString("vi-VN")
-                  : ""}
-              </span>
+              {item.createdAt?.toDate
+                ? item.createdAt.toDate().toLocaleString("vi-VN")
+                : ""}
             </div>
-            <Comments restaurantId={item.id} />
           </div>
         </div>
       ))}
