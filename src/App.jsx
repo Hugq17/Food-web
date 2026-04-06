@@ -2,20 +2,15 @@ import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
 
-import Map from "./components/Map";
 import Category from "./components/Category";
 import List from "./components/List";
 import AddRestaurant from "./components/AddRestaurant";
-import RestaurantDetail from "./components/RestaurantDetail"; // 🔥 THÊM
+import RestaurantDetail from "./components/RestaurantDetail";
 
 function App() {
   const [selected, setSelected] = useState("Tất cả");
   const [restaurants, setRestaurants] = useState([]);
-  const [selectedPlace, setSelectedPlace] = useState(null);
-  const [showMap, setShowMap] = useState(true);
   const [showForm, setShowForm] = useState(false);
-
-  // 🔥 THÊM STATE NÀY
   const [selectedDetail, setSelectedDetail] = useState(null);
 
   useEffect(() => {
@@ -34,19 +29,17 @@ function App() {
   }, []);
 
   const filtered =
-    selected === "Tất cả"
-      ? restaurants
-      : restaurants.filter((r) => r.category === selected);
+  selected === "Tất cả"
+    ? restaurants
+    : restaurants.filter((r) => r.category === selected);
 
-  const handleSelectPlace = (place) => {
-    setSelectedPlace(place);
-    setShowMap(true);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+// 🔥 sort mới nhất lên đầu
+const sorted = [...filtered].sort((a, b) => {
+  return (
+    (b.createdAt?.seconds || 0) -
+    (a.createdAt?.seconds || 0)
+  );
+});
 
   return (
     <div className="max-w-md mx-auto bg-gray-100 min-h-screen">
@@ -55,40 +48,19 @@ function App() {
         🍜 Food Map by QH
       </h1>
 
-      {/* TOGGLE MAP */}
-      <div className="flex justify-end px-3 mt-2">
-        <button
-          onClick={() => setShowMap(!showMap)}
-          className="text-sm bg-gradient-to-r from-blue-500 to-blue-400 text-white px-4 py-2 rounded-full shadow hover:scale-105 transition"
-        >
-          {showMap ? "🗺️ Ẩn map" : "📍 Hiện map"}
-        </button>
-      </div>
-
-      {/* MAP */}
-      {showMap && (
-        <div className="p-3">
-          <Map data={filtered} selectedPlace={selectedPlace} />
-        </div>
-      )}
-
       {/* CATEGORY */}
       <Category
         selected={selected}
-        setSelected={(value) => {
-          setSelected(value);
-          setSelectedPlace(null);
-        }}
+        setSelected={setSelected}
       />
 
       {/* LIST */}
       <List
-        data={filtered}
+        data={sorted}
         onSelectDetail={(item) => setSelectedDetail(item)}
-        onSelectMap={handleSelectPlace}
       />
 
-      {/* 🔥 DETAIL MODAL */}
+      {/* DETAIL */}
       {selectedDetail && (
         <RestaurantDetail
           item={selectedDetail}

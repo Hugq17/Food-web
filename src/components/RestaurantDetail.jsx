@@ -18,10 +18,17 @@ export default function RestaurantDetail({ item, onClose }) {
       >
         {/* IMAGE */}
         <div className="relative">
-          <img
-            src={item.image}
-            className="w-full h-56 object-cover"
-          />
+          <div className="relative">
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+              {(item.images?.length ? item.images : [item.image]).map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  className="w-full h-56 object-cover flex-shrink-0 snap-center"
+                />
+              ))}
+            </div>
+          </div>
 
           {/* CLOSE */}
           <button
@@ -65,13 +72,13 @@ export default function RestaurantDetail({ item, onClose }) {
               ⏱{" "}
               {item.createdAt?.toDate
                 ? item.createdAt
-                    .toDate()
-                    .toLocaleString("vi-VN", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      day: "2-digit",
-                      month: "2-digit",
-                    })
+                  .toDate()
+                  .toLocaleString("vi-VN", {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    day: "2-digit",
+                    month: "2-digit",
+                  })
                 : ""}
             </span>
           </div>

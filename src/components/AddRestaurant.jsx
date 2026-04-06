@@ -4,49 +4,26 @@ import { db } from "../firebase";
 
 export default function AddRestaurant({ onClose }) {
   const [name, setName] = useState("");
-  const [address, setAddress] = useState("");
+  const [street, setStreet] = useState("");
+  const [ward, setWard] = useState("");
+  const [city, setCity] = useState("");
   const [category, setCategory] = useState("Ăn vặt");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [createdBy, setCreatedBy] = useState("");
 
   // 🔥 LẤY LAT/LNG TỪ ĐỊA CHỈ
-  const getLatLngFromAddress = async () => {
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`
-      );
 
-      const data = await res.json();
-
-      if (data.length === 0) {
-        alert("Không tìm thấy địa chỉ!");
-        return null;
-      }
-
-      return {
-        lat: Number(data[0].lat),
-        lng: Number(data[0].lon),
-      };
-    } catch (err) {
-      console.error(err);
-      alert("Lỗi tìm địa chỉ");
-      return null;
-    }
-  };
 
   // 🔥 UPLOAD ẢNH CLOUDINARY
-  const uploadImage = async () => {
-    if (!file) {
-      alert("Chọn ảnh trước!");
-      return null;
-    }
+  const uploadImages = async () => {
+    const urls = [];
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "food-web");
+    for (let file of files) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "food-web");
 
-    try {
       const res = await fetch(
         "https://api.cloudinary.com/v1_1/dronxgw1h/image/upload",
         {
@@ -56,17 +33,15 @@ export default function AddRestaurant({ onClose }) {
       );
 
       const data = await res.json();
-      return data.secure_url;
-    } catch (err) {
-      console.error(err);
-      alert("Upload ảnh lỗi!");
-      return null;
+      urls.push(data.secure_url);
     }
+
+    return urls;
   };
 
   // 🔥 SUBMIT
   const handleSubmit = async () => {
-    if (!name || !address) {
+    if (!name || !street || !ward || !city) {
       alert("Nhập đầy đủ thông tin!");
       return;
     }
@@ -74,37 +49,29 @@ export default function AddRestaurant({ onClose }) {
     setLoading(true);
 
     try {
-      const location = await getLatLngFromAddress();
-      if (!location) {
-        setLoading(false);
-        return;
-      }
+      const fullAddress = `${street}, ${ward}, ${city}`;
 
-      const imageUrl = await uploadImage();
-      if (!imageUrl) {
-        setLoading(false);
-        return;
-      }
+      const imageUrls = await uploadImages(); // ✅ đúng
 
       await addDoc(collection(db, "restaurants"), {
         name,
-        address,
-        lat: location.lat,
-        lng: location.lng,
+        address: fullAddress,
         category,
         rating: 4,
-        image: imageUrl,
-        createdBy: createdBy || "Ẩn danh", // 🔥 thêm dòng này
-        createdAt: new Date(), // 🔥 thêm timestamp
+        images: imageUrls,
+        createdBy: createdBy || "Ẩn danh",
+        createdAt: new Date(),
       });
 
       alert("Đã thêm quán!");
 
-      // reset
       setName("");
-      setAddress("");
+      setStreet("");
+      setWard("");
+      setCity("");
       setCategory("Ăn vặt");
-      setFile(null);
+      setFiles([]);
+      setCreatedBy("");
 
       onClose();
     } catch (err) {
@@ -114,7 +81,6 @@ export default function AddRestaurant({ onClose }) {
 
     setLoading(false);
   };
-
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
       {/* overlay */}
@@ -144,9 +110,23 @@ export default function AddRestaurant({ onClose }) {
 
         {/* address */}
         <input
-          placeholder="Địa chỉ (vd: 74 Hàng Quạt, Hà Nội)"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Tên đường (vd: 74 Hàng Quạt)"
+          value={street}
+          onChange={(e) => setStreet(e.target.value)}
+          className="border p-2 w-full rounded"
+        />
+
+        <input
+          placeholder="Phường (vd: Hàng Gai)"
+          value={ward}
+          onChange={(e) => setWard(e.target.value)}
+          className="border p-2 w-full rounded"
+        />
+
+        <input
+          placeholder="Thành phố (vd: Hà Nội)"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
           className="border p-2 w-full rounded"
         />
 
@@ -180,15 +160,20 @@ export default function AddRestaurant({ onClose }) {
         {/* file */}
         <input
           type="file"
-          onChange={(e) => setFile(e.target.files[0])}
+          multiple
+          onChange={(e) => setFiles([...e.target.files])}
         />
-
         {/* preview */}
-        {file && (
-          <img
-            src={URL.createObjectURL(file)}
-            className="h-32 object-cover rounded"
-          />
+        {files.length > 0 && (
+          <div className="flex gap-2 overflow-x-auto">
+            {files.map((f, i) => (
+              <img
+                key={i}
+                src={URL.createObjectURL(f)}
+                className="h-24 w-24 object-cover rounded"
+              />
+            ))}
+          </div>
         )}
 
         {/* button */}
